@@ -5,7 +5,7 @@ from models.users import Users
 app = Flask(__name__)
 
 
-u = Users(name='a', surname='b', email='c', role='d', password='e')
+u = Users(name='sedat', surname='cagdas', email='sedat@test.com', role='admin', password='pw')
 u.create()
 print('heloo')
 

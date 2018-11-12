@@ -26,8 +26,15 @@ class Users(object):
         db_client.query(exp)
 
     def create(self):
-        exp = '''INSERT INTO {table_name} VALUES ({values})'''.format(
+        exp = '''INSERT INTO {table_name} ({table_fields}) VALUES ({values})'''.format(
             table_name=self.__class__.__name__.lower(),
+            table_fields=','.join([
+                '{}'.format('name'),
+                '{}'.format('surname'),
+                '{}'.format('email'),
+                '{}'.format('password'),
+                '{}'.format('role')
+            ]),
             values=','.join([
                 "'{}'".format(self.name),
                 "'{}'".format(self.surname),
