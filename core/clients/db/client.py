@@ -10,9 +10,22 @@ class Client(object):
         self.connection = db.connect(self.dsn)
         self.cursor = self.connection.cursor()
 
-    def query(self, statement):
-        self.cursor.execute(statement)
-        self.connection.commit()
+    def query(self, statement, params=None):
+        try:
+            self.cursor.execute(statement, params)
+            self.connection.commit()
+        except:
+            self.connection.rollback()
+            raise
+
+    def fetch(self, statement, params=None):
+        try:
+            self.cursor.execute(statement, params)
+            self.connection.commit()
+            return self.cursor.fetchall()
+        except:
+            self.connection.rollback()
+            raise
 
     def __del__(self):
         self.connection.close()
