@@ -1,9 +1,24 @@
 from core.clients.db.client import db_client
 from .base import BaseModel
 from .users import Users
+from .types import QueryList
 
 
 class Questions(BaseModel):
+    sql_fields = [
+        'id SERIAL UNIQUE',
+        'question_image TEXT NOT NULL',
+        'answer_image TEXT',
+        'choice CHAR',
+        'course VARCHAR(20)',
+        'subject VARCHAR(30)',
+        'quality_rate NUMERIC',
+        'difficulty_rate NUMERIC',
+        'comment TEXT',
+        'teacher INTEGER REFERENCES users(id) ON DELETE SET NULL'
+    ]
+
+    sql_field_number = len(sql_fields)
 
     def __init__(self, id=None, question_image=None, answer_image=None, choice=None, course=None,
                  subject=None, quality_rate=None, difficulty_rate=None, comment=None, teacher=None):
@@ -19,27 +34,9 @@ class Questions(BaseModel):
         self.comment = comment
         self.teacher = teacher
 
-        if not type(teacher) == Users:
-            self.teacher = Users.get(id=teacher)
-
-        sql_fields = [
-            'id SERIAL UNIQUE',
-            'question_image TEXT NOT NULL',
-            'answer_image TEXT',
-            'choice CHAR',
-            'course VARCHAR(20)',
-            'subject VARCHAR(30)',
-            'quality_rate NUMERIC',
-            'difficulty_rate NUMERIC',
-            'comment TEXT',
-            'teacher INTEGER REFERENCES users(id) ON DELETE SET NULL'
-        ]
-
-        self.sql_field_number = len(sql_fields)
-
         exp = '''CREATE TABLE IF NOT EXISTS {table_name} ({fields})'''.format(
             table_name=self.__class__.__name__.lower(),
-            fields=','.join(sql_fields))
+            fields=','.join(self.sql_fields))
 
         db_client.query(exp)
 
@@ -88,3 +85,27 @@ class Questions(BaseModel):
                                             self.comment,
                                             self.teacher.id))[0][0]
         return self
+
+    @classmethod
+    def filter(cls, **kwargs):
+        params = ['TRUE']
+        values = []
+
+        for key, value in kwargs.items():
+            params.append("{}.{}=%s".format(cls.__name__.lower(), key))
+            values.append(value)
+
+        exp = '''SELECT * FROM {table_name} FULL JOIN users ON questions.teacher = users.id 
+                 WHERE {filter}'''.format(
+            table_name=cls.__name__.lower(),
+            filter=' and '.join(params),
+        )
+        print(exp)
+        rows = db_client.fetch(exp, values)
+        objects = []
+        for row in rows:
+            t = Users(*row[cls.sql_field_number:])
+            q = Questions(*row[:cls.sql_field_number])
+            q.teacher=t
+            objects.append(q)
+        return QueryList(objects)

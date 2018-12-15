@@ -1,12 +1,26 @@
 from core.clients.db.client import db_client
+from .types import QueryList
 from .base import BaseModel
 from .users import Users
 from .questions import Questions
 
 
 class FeedBacks(BaseModel):
+    sql_fields = [
+        'id SERIAL UNIQUE',
+        'question INTEGER REFERENCES questions(id) ON DELETE CASCADE',
+        'comment TEXT',
+        'quality_rate NUMERIC',
+        'difficulty_rate NUMERIC',
+        'is_proper BOOLEAN DEFAULT FALSE',
+        'created_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP',
+        'reviewer INTEGER REFERENCES users(id) ON DELETE SET NULL',
+    ]
 
-    def __init__(self, id=None, question=Questions(), comment=None, quality_rate=None, difficulty_rate=None, is_proper=None,
+    sql_field_number = len(sql_fields)
+
+    def __init__(self, id=None, question=Questions(), comment=None, quality_rate=None, difficulty_rate=None,
+                 is_proper=None,
                  created_at=None, reviewer=Users()):
         self.id = id
         self.question = question
@@ -23,27 +37,9 @@ class FeedBacks(BaseModel):
         if not type(reviewer) == Users:
             self.reviewer = Users.get(id=reviewer)
 
-        sql_fields = [
-            'id SERIAL UNIQUE',
-            'question INTEGER REFERENCES questions(id) ON DELETE CASCADE',
-            'comment TEXT',
-            'quality_rate NUMERIC',
-            'difficulty_rate NUMERIC',
-            'is_proper BOOLEAN DEFAULT FALSE',
-            'created_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP',
-            'reviewer INTEGER REFERENCES users(id) ON DELETE SET NULL',
-        ]
-
-        self.foreign_keys=[
-            'question',
-            'reviewer'
-        ]
-
-        self.sql_field_number = len(sql_fields)
-
         exp = '''CREATE TABLE IF NOT EXISTS {table_name} ({fields})'''.format(
             table_name=self.__class__.__name__.lower(),
-            fields=','.join(sql_fields))
+            fields=','.join(self.sql_fields))
 
         db_client.query(exp)
 
@@ -84,3 +80,32 @@ class FeedBacks(BaseModel):
                                                              self.is_proper,
                                                              self.reviewer.id))[0]
         return self
+
+    @classmethod
+
+    def filter(cls, **kwargs):
+        params = ['TRUE']
+        values = []
+
+        for key, value in kwargs.items():
+            params.append("{}.{}=%s".format(cls.__name__.lower(), key))
+            values.append(value)
+
+        exp = '''SELECT * FROM {table_name} FULL JOIN users ON feedbacks.reviewer = users.id
+                    JOIN questions ON feedbacks.question=questions.id
+                    WHERE {filter}'''.format(
+            table_name=cls.__name__.lower(),
+            filter=' and '.join(params),
+        )
+        print(exp)
+        rows = db_client.fetch(exp, values)
+        objects = []
+        for row in rows:
+            t = Users(*row[cls.sql_field_number:cls.sql_field_number+Users.sql_field_number])
+            q = Questions(*row[cls.sql_field_number+Users.sql_field_number:])
+            q.teacher = Users.get(id=q.teacher)
+            fb = FeedBacks(*row[:cls.sql_field_number])
+            fb.reviewer = t
+            fb.question = q
+            objects.append(fb)
+        return QueryList(objects)

@@ -3,6 +3,18 @@ from .base import BaseModel
 
 
 class Users(BaseModel):
+    sql_fields = [
+        'id SERIAL UNIQUE',
+        'name VARCHAR(20)',
+        'surname VARCHAR(20)',
+        'email VARCHAR(40) UNIQUE',
+        'phone_number VARCHAR(12) UNIQUE',
+        'password VARCHAR(16)',
+        'role VARCHAR(20)',
+        'iban VARCHAR(24)'
+    ]
+
+    sql_field_number = len(sql_fields)
 
     def __init__(self, id=None, name=None, surname=None, email=None, phone_number=None, password=None, role=None,
                  iban=None):
@@ -15,20 +27,9 @@ class Users(BaseModel):
         self.role = role
         self.iban = iban
 
-        sql_fields = [
-            'id SERIAL UNIQUE',
-            'name VARCHAR(20)',
-            'surname VARCHAR(20)',
-            'email VARCHAR(40) UNIQUE',
-            'phone_number VARCHAR(12) UNIQUE',
-            'password VARCHAR(16)',
-            'role VARCHAR(20)',
-            'iban VARCHAR(24)'
-        ]
-
         exp = '''CREATE TABLE IF NOT EXISTS {table_name} ({fields})'''.format(
             table_name=self.__class__.__name__.lower(),
-            fields=','.join(sql_fields))
+            fields=','.join(self.sql_fields))
 
         db_client.query(exp)
 
