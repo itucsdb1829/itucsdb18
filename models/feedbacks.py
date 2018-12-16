@@ -56,7 +56,12 @@ class FeedBacks(BaseModel):
                 table_name=self.__class__.__name__.lower(),
                 values=update_set,
             )
-            query = db_client.fetch(exp, (self.id,))
+            query = db_client.fetch(exp, (self.comment,
+                                          self.quality_rate,
+                                          self.difficulty_rate,
+                                          self.is_proper,
+                                          self.reviewer,
+                                          self.id))
             self.id = query[0][0]
             self.created_at = query[0][1]
         else:
@@ -82,7 +87,6 @@ class FeedBacks(BaseModel):
         return self
 
     @classmethod
-
     def filter(cls, **kwargs):
         params = ['TRUE']
         values = []
@@ -101,10 +105,12 @@ class FeedBacks(BaseModel):
         rows = db_client.fetch(exp, values)
         objects = []
         for row in rows:
-            t = Users(*row[cls.sql_field_number:cls.sql_field_number+Users.sql_field_number])
-            q = Questions(*row[cls.sql_field_number+Users.sql_field_number:])
-            q.teacher = Users.get(id=q.teacher)
+            t = Users(*row[cls.sql_field_number:cls.sql_field_number + Users.sql_field_number])
+            q = Questions(*row[cls.sql_field_number + Users.sql_field_number:])
+            q.teacher = Users.get(id=q.teacher.id)
             fb = FeedBacks(*row[:cls.sql_field_number])
+            fb.quality_rate = int(fb.quality_rate)
+            fb.difficulty_rate = int(fb.quality_rate)
             fb.reviewer = t
             fb.question = q
             objects.append(fb)

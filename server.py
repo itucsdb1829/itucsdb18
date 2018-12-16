@@ -6,6 +6,7 @@ from flask_restful import Api, Resource, reqparse
 
 from views.auth import token_serializer, AuthAPI, auth, TokenToUserAPI
 from models.users import Users
+from views.feedbacks import FeedbackListAPI, FeedbacksAPI
 from views.questions import QuestionsAPI, QuestionListAPI
 from views.users import UsersAPI, UserListAPI
 
@@ -35,6 +36,9 @@ api.add_resource(UserListAPI, '/users')
 
 api.add_resource(QuestionsAPI, '/questions/<int:id>')
 api.add_resource(QuestionListAPI, '/questions')
+
+api.add_resource(FeedbacksAPI, '/feedbacks/<int:id>')
+api.add_resource(FeedbackListAPI, '/feedbacks')
 
 @app.route("/")
 def home_page():
