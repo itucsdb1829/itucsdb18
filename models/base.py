@@ -30,7 +30,7 @@ class BaseModel(object):
 
     def delete(self):
         if not self.id:
-            return
+            return None
 
         exp = '''DELETE FROM {table_name} WHERE id=%s RETURNING id'''.format(
             table_name=self.__class__.__name__.lower(),
@@ -49,7 +49,7 @@ class BaseModel(object):
             params.append("{}=%s".format(key))
             values.append(value)
 
-        exp = '''SELECT * FROM {table_name} WHERE {filter}'''.format(
+        exp = '''SELECT * FROM {table_name} WHERE {filter} ORDER BY id ASC'''.format(
             table_name=cls.__name__.lower(),
             filter=' and '.join(params),
         )

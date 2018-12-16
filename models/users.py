@@ -58,6 +58,7 @@ class Users(BaseModel):
                                             self.iban,
                                             self.id))[0][0]
         else:
+            self.password = generate_password_hash(self.password)
             exp = '''INSERT INTO {table_name} ({table_fields}) VALUES ({values}) RETURNING id'''.format(
                 table_name=self.__class__.__name__.lower(),
                 table_fields=','.join([
