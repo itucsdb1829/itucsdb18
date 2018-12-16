@@ -1,4 +1,8 @@
 Flask>=1.0
 psycopg2-binary>=2.7
 gunicorn>=19.9
-
+flask-httpauth
+flask-restful
+flask-cors
+werkzeug
+itsdangerous

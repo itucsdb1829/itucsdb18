@@ -1,5 +1,6 @@
 from core.clients.db.client import db_client
 from .base import BaseModel
+from werkzeug.security import generate_password_hash, check_password_hash
 
 
 class Users(BaseModel):
@@ -9,7 +10,7 @@ class Users(BaseModel):
         'surname VARCHAR(20)',
         'email VARCHAR(40) UNIQUE',
         'phone_number VARCHAR(12) UNIQUE',
-        'password VARCHAR(16)',
+        'password bytea',
         'role VARCHAR(20)',
         'iban VARCHAR(24)'
     ]
@@ -23,7 +24,7 @@ class Users(BaseModel):
         self.surname = surname
         self.email = email
         self.phone_number = phone_number
-        self.password = password  # TODO: hash it
+        self.password = password
         self.role = role
         self.iban = iban
 
@@ -48,7 +49,14 @@ class Users(BaseModel):
                 table_name=self.__class__.__name__.lower(),
                 values=update_set,
             )
-            self.id = db_client.fetch(exp, (self.id,))[0][0]
+            self.id = db_client.fetch(exp, (self.name,
+                                            self.surname,
+                                            self.email,
+                                            self.phone_number,
+                                            self.password,
+                                            self.role,
+                                            self.iban,
+                                            self.id))[0][0]
         else:
             exp = '''INSERT INTO {table_name} ({table_fields}) VALUES ({values}) RETURNING id'''.format(
                 table_name=self.__class__.__name__.lower(),
@@ -73,3 +81,9 @@ class Users(BaseModel):
                                             self.iban))[0][0]
         return self
 
+    def check_password(self, password):
+        return check_password_hash(self.password, password)
+
+    def set_password(self, password):
+        self.password = generate_password_hash(password)
+        self.save()
