@@ -6,6 +6,7 @@ from flask_restful import Api, Resource, reqparse
 
 from views.auth import token_serializer, AuthAPI, auth, TokenToUserAPI
 from models.users import Users
+from views.questions import QuestionsAPI, QuestionListAPI
 from views.users import UsersAPI, UserListAPI
 
 app = Flask(__name__)
@@ -28,30 +29,16 @@ def verify_token(token):
 
 api.add_resource(TokenToUserAPI, '/me')
 api.add_resource(AuthAPI, '/auth')
+
 api.add_resource(UsersAPI, '/users/<int:id>')
 api.add_resource(UserListAPI, '/users')
 
-
-
+api.add_resource(QuestionsAPI, '/questions/<int:id>')
+api.add_resource(QuestionListAPI, '/questions')
 
 @app.route("/")
 def home_page():
     return 'This is api welcome page'
-
-
-@app.route("/users/create", methods=['POST'])
-def create_user():
-    if request.method == 'POST':
-        if request.headers.get('Token') != os.getenv('AUTH_TOKEN'):
-            return Response(status=401)
-        user_data=dict()
-        for key, value in request.form.items():
-            user_data[key] = value
-
-        u = Users(**user_data)
-        u.create()
-    return Response(status=201)
-
 
 if __name__ == "__main__":
     app.run(debug=True  )

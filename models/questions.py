@@ -12,8 +12,6 @@ class Questions(BaseModel):
         'choice CHAR',
         'course VARCHAR(20)',
         'subject VARCHAR(30)',
-        'quality_rate NUMERIC',
-        'difficulty_rate NUMERIC',
         'comment TEXT',
         'teacher INTEGER REFERENCES users(id) ON DELETE SET NULL'
     ]
@@ -21,7 +19,7 @@ class Questions(BaseModel):
     sql_field_number = len(sql_fields)
 
     def __init__(self, id=None, question_image=None, answer_image=None, choice=None, course=None,
-                 subject=None, quality_rate=None, difficulty_rate=None, comment=None, teacher=None):
+                 subject=None, comment=None, teacher=None):
 
         self.id = id
         self.question_image = question_image
@@ -29,10 +27,10 @@ class Questions(BaseModel):
         self.choice = choice
         self.course = course
         self.subject = subject
-        self.quality_rate = quality_rate
-        self.difficulty_rate = difficulty_rate
         self.comment = comment
         self.teacher = teacher
+        if not teacher or type(teacher) != Users:
+            self.teacher = Users.get(id=1)
 
         exp = '''CREATE TABLE IF NOT EXISTS {table_name} ({fields})'''.format(
             table_name=self.__class__.__name__.lower(),
@@ -48,8 +46,6 @@ class Questions(BaseModel):
                 "{key}=%s".format(key='choice', value=self.choice),
                 "{key}=%s".format(key='course', value=self.course),
                 "{key}=%s".format(key='subject', value=self.subject),
-                "{key}=%s".format(key='quality_rate', value=self.quality_rate),
-                "{key}=%s".format(key='difficulty_rate', value=self.difficulty_rate),
                 "{key}=%s".format(key='comment', value=self.comment),
                 "{key}=%s".format(key='teacher', value=self.teacher.id),
             ])
@@ -57,7 +53,14 @@ class Questions(BaseModel):
                 table_name=self.__class__.__name__.lower(),
                 values=update_set,
             )
-            self.id = db_client.fetch(exp, (self.id,))[0][0]
+            self.id = db_client.fetch(exp, (self.question_image,
+                                            self.answer_image,
+                                            self.choice,
+                                            self.course,
+                                            self.subject,
+                                            self.comment,
+                                            self.teacher.id,
+                                            self.id))[0][0]
 
         else:
             exp = '''INSERT INTO {table_name} ({table_fields}) VALUES ({values}) RETURNING id'''.format(
@@ -68,20 +71,16 @@ class Questions(BaseModel):
                     '{}'.format('choice'),
                     '{}'.format('course'),
                     '{}'.format('subject'),
-                    '{}'.format('quality_rate'),
-                    '{}'.format('difficulty_rate'),
                     '{}'.format('comment'),
                     '{}'.format('teacher'),
                 ]),
-                values=','.join(['%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s'])
+                values=','.join(['%s', '%s', '%s', '%s', '%s', '%s', '%s'])
             )
             self.id = db_client.fetch(exp, (self.question_image,
                                             self.answer_image,
                                             self.choice,
                                             self.course,
                                             self.subject,
-                                            self.quality_rate,
-                                            self.difficulty_rate,
                                             self.comment,
                                             self.teacher.id))[0][0]
         return self
@@ -95,7 +94,7 @@ class Questions(BaseModel):
             params.append("{}.{}=%s".format(cls.__name__.lower(), key))
             values.append(value)
 
-        exp = '''SELECT * FROM {table_name} FULL JOIN users ON questions.teacher = users.id 
+        exp = '''SELECT * FROM {table_name} JOIN users ON questions.teacher = users.id 
                  WHERE {filter}'''.format(
             table_name=cls.__name__.lower(),
             filter=' and '.join(params),
