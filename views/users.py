@@ -19,7 +19,7 @@ class UsersAPI(Resource):
     def get(self, id):
         u = Users.get(id=id)
         if u:
-            return [u.__dict__]
+            return u.__dict__
         return {}, 404
 
     def put(self, id):
@@ -29,7 +29,7 @@ class UsersAPI(Resource):
             u.update(**args)
             if args.get('password'):
                 u.set_password(args.get('password'))
-            return [u.__dict__]
+            return u.__dict__
         return {}, 404
 
     def delete(self, id):
@@ -37,7 +37,7 @@ class UsersAPI(Resource):
         if u:
             r = u.__dict__
             u.delete()
-            return [r], 200
+            return r, 200
 
 
 class UserListAPI(Resource):
@@ -65,5 +65,5 @@ class UserListAPI(Resource):
         if args:
             u = Users.create(**args)
             if u:
-                return [u.__dict__]
+                return u.__dict__
         return {}, 404
