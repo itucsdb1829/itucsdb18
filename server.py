@@ -34,11 +34,9 @@ api.add_resource(UserListAPI, '/users')
 
 
 
-@auth.login_required
 @app.route("/")
 def home_page():
-    print(auth.authenticate())
-    return 'sa'
+    return 'This is api welcome page'
 
 
 @app.route("/users/create", methods=['POST'])
