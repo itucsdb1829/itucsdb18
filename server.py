@@ -18,7 +18,6 @@ api = Api(app)
 
 @auth.verify_token
 def verify_token(token):
-    print(token)
     try:
         data = token_serializer.loads(token)
     except:

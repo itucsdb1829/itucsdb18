@@ -77,7 +77,7 @@ class FeedBacks(BaseModel):
                 ]),
                 values=','.join(['%s', '%s', '%s', '%s', '%s', '%s'])
             )
-            print(exp)
+
             self.id, self.created_at = db_client.fetch(exp, (self.comment,
                                                              self.question.id,
                                                              self.quality_rate,
@@ -101,7 +101,6 @@ class FeedBacks(BaseModel):
             table_name=cls.__name__.lower(),
             filter=' and '.join(params),
         )
-        print(exp)
         rows = db_client.fetch(exp, values)
         objects = []
         for row in rows:

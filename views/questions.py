@@ -80,7 +80,6 @@ class QuestionListAPI(Resource):
 
     def post(self):
         args = self.parser.parse_args()
-        print(args)
         if args:
             if args.get('teacher'):
                 t = Users.get(email=args.get('teacher', {}).get('email'))

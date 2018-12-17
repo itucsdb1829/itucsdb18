@@ -22,8 +22,6 @@ class BaseModel(object):
             filter=','.join(set_params),
         )
         set_values.append(self.id)
-        print(exp)
-
         db_client.query(exp, set_values)
         self.__dict__.update(**kwargs)
         return self
@@ -53,7 +51,7 @@ class BaseModel(object):
             table_name=cls.__name__.lower(),
             filter=' and '.join(params),
         )
-        print(exp)
+
         rows = db_client.fetch(exp, values)
         objects = [cls(*row) for row in rows]
 

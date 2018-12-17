@@ -18,7 +18,6 @@ class AuthAPI(Resource):
 
     def post(self):
         args = self.parser.parse_args()
-        print(args)
         email = args.get('username')
         password = args.get('password')
         if email and password:

@@ -72,7 +72,7 @@ class Users(BaseModel):
                 ]),
                 values=','.join(['%s', '%s', '%s', '%s', '%s', '%s', '%s'])
             )
-            print(exp)
+
             self.id = db_client.fetch(exp, (self.name,
                                             self.surname,
                                             self.email,

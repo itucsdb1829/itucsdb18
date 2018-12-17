@@ -117,7 +117,7 @@ class Questions(BaseModel):
             table_name=cls.__name__.lower(),
             filter=' and '.join(params),
         )
-        print(exp)
+
         rows = db_client.fetch(exp, values)
         objects = []
         for row in rows:

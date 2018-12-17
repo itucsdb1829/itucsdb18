@@ -110,7 +110,6 @@ class FeedbackListAPI(Resource):
 
     def post(self):
         args = self.parser.parse_args()
-        print(args)
         if args:
             if args.get('reviewer'):
                 t = Users.get(email=args.get('reviewer', {}).get('email'))
