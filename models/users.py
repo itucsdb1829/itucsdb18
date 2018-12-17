@@ -10,7 +10,7 @@ class Users(BaseModel):
         'surname VARCHAR(20)',
         'email VARCHAR(40) UNIQUE',
         'phone_number VARCHAR(12) UNIQUE',
-        'password bytea',
+        'password text',
         'role VARCHAR(20)',
         'iban VARCHAR(24)'
     ]
