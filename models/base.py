@@ -1,5 +1,6 @@
 from core.clients.db.client import db_client
 from .types import QueryList
+from werkzeug.security import generate_password_hash
 
 
 class BaseModel(object):
@@ -12,6 +13,9 @@ class BaseModel(object):
     def update(self, **kwargs):
         set_params = []
         set_values = []
+
+        if 'password' in kwargs:
+            kwargs['password'] = generate_password_hash(kwargs['password'])
 
         for key, value in kwargs.items():
             set_params.append("{}=%s".format(key))
