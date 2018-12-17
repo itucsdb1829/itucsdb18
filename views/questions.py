@@ -23,6 +23,7 @@ class QuestionsAPI(Resource):
         if q:
             if q.teacher:
                 q.teacher = q.teacher.__dict__
+                q.teacher['full_name'] = '{} {}'.format(q.teacher['name'], q.teacher['surname'])
             return q.__dict__
         return {}, 404
 
@@ -70,6 +71,7 @@ class QuestionListAPI(Resource):
                 feedbacks = q.get_feedbacks()
                 if q.teacher:
                     q.teacher = q.teacher.__dict__
+                    q.teacher['full_name'] = '{} {}'.format(q.teacher['name'], q.teacher['surname'])
                 q = q.__dict__
                 q['feedbacks'] = feedbacks
                 r.append(q)

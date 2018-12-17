@@ -24,9 +24,9 @@ class AuthAPI(Resource):
         if email and password:
             u = Users.get(email=email)
             if u and u.check_password(password):
-                return {'token': token_serializer.dumps(
-                    {'email': email,
-                     'role': u.role}).decode('utf-8')}, 201
+                return {'token': token_serializer.dumps({'email': email,
+                                                         'role': u.role}).decode('utf-8'),
+                        'role': u.role}, 201
 
 
 class TokenToUserAPI(Resource):

@@ -62,11 +62,14 @@ class FeedbacksAPI(Resource):
         if fb:
             if fb.reviewer:
                 fb.reviewer = fb.reviewer.__dict__
+                fb.reviewer['full_name'] = '{} {}'.format(fb.reviewer['name'], fb.reviewer['surname'])
             if fb.created_at:
                 fb.created_at = fb.created_at.isoformat()
             if fb.question:
                 if fb.question.teacher:
                     fb.question.teacher = fb.question.teacher.__dict__
+                    fb.question.teacher['full_name'] = '{} {}'.format(fb.question.teacher['name'],
+                                                                      fb.question.teacher['surname'])
                 fb.question = fb.question.__dict__
             r = fb.__dict__
             fb.delete()
@@ -92,11 +95,13 @@ class FeedbackListAPI(Resource):
             for fb in qs:
                 if fb.reviewer:
                     fb.reviewer = fb.reviewer.__dict__
+                    fb.reviewer['full_name'] = '{} {}'.format(fb.reviewer['name'], fb.reviewer['surname'])
                 if fb.created_at:
                     fb.created_at = fb.created_at.isoformat()
                 if fb.question:
                     if fb.question.teacher:
                         fb.question.teacher = fb.question.teacher.__dict__
+                        fb.question.teacher['full_name'] = '{} {}'.format(fb.question.teacher['name'], fb.question.teacher['surname'])
                     fb.question = fb.question.__dict__
                 fb = fb.__dict__
                 r.append(fb)
