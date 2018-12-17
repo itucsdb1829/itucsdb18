@@ -29,8 +29,12 @@ class Questions(BaseModel):
         self.subject = subject
         self.comment = comment
         self.teacher = teacher
-        if not teacher or type(teacher) != Users:
-            self.teacher = Users.get(id=1)
+        if not teacher:
+            teacher_id=1
+        if type(teacher) != Users:
+            teacher_id=teacher
+
+        self.teacher = Users.get(id=teacher_id)
 
         exp = '''CREATE TABLE IF NOT EXISTS {table_name} ({fields})'''.format(
             table_name=self.__class__.__name__.lower(),
