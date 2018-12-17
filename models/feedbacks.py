@@ -97,7 +97,7 @@ class FeedBacks(BaseModel):
 
         exp = '''SELECT * FROM {table_name} FULL JOIN users ON feedbacks.reviewer = users.id
                     JOIN questions ON feedbacks.question=questions.id
-                    WHERE {filter}'''.format(
+                    WHERE {filter} ORDER BY feedbacks.id DESC'''.format(
             table_name=cls.__name__.lower(),
             filter=' and '.join(params),
         )

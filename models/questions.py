@@ -113,7 +113,7 @@ class Questions(BaseModel):
             values.append(value)
 
         exp = '''SELECT * FROM {table_name} JOIN users ON questions.teacher = users.id 
-                 WHERE {filter}'''.format(
+                 WHERE {filter} ORDER BY questions.id DESC '''.format(
             table_name=cls.__name__.lower(),
             filter=' and '.join(params),
         )
