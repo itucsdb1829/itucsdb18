@@ -60,7 +60,7 @@ class FeedBacks(BaseModel):
                                           self.quality_rate,
                                           self.difficulty_rate,
                                           self.is_proper,
-                                          self.reviewer,
+                                          self.reviewer.id,
                                           self.id))
             self.id = query[0][0]
             self.created_at = query[0][1]

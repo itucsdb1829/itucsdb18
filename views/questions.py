@@ -1,6 +1,7 @@
 from flask_restful import reqparse, Resource
 from models.users import Users
 from models.questions import Questions
+from models.feedbacks import FeedBacks
 from views.auth import auth
 
 
@@ -66,9 +67,11 @@ class QuestionListAPI(Resource):
         if qs:
             r = []
             for q in qs:
+                feedbacks = q.get_feedbacks()
                 if q.teacher:
                     q.teacher = q.teacher.__dict__
                 q = q.__dict__
+                q['feedbacks'] = feedbacks
                 r.append(q)
             return r, 200
         return {}, 404

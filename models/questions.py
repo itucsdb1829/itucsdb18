@@ -85,6 +85,24 @@ class Questions(BaseModel):
                                             self.teacher.id))[0][0]
         return self
 
+    def get_feedbacks(self):
+        exp = '''SELECT comment, quality_rate, difficulty_rate, is_proper, created_at, users.name, users.surname 
+                FROM feedbacks JOIN users ON feedbacks.reviewer = users.id WHERE question=%s'''
+
+        rows = db_client.fetch(exp, (self.id,))
+        r = []
+        for row in rows:
+            d = {}
+            d['comment'] = row[0]
+            d['quality_rate'] = int(row[1])
+            d['difficulty_rate'] = int(row[2])
+            d['is_proper'] = row[3]
+            d['created_at'] = row[4].isoformat()
+            d['reviewer'] = '{} {}'.format(row[5], row[6])
+            r.append(d)
+
+        return r
+
     @classmethod
     def filter(cls, **kwargs):
         params = ['TRUE']
