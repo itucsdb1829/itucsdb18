@@ -1,3 +1,5 @@
+import os
+
 from flask_restful import reqparse, Resource
 from flask_httpauth import HTTPTokenAuth
 from itsdangerous import TimedJSONWebSignatureSerializer as Serializer
@@ -5,7 +7,7 @@ from itsdangerous import TimedJSONWebSignatureSerializer as Serializer
 from models.users import Users
 
 auth = HTTPTokenAuth('Bearer')
-token_serializer = Serializer('top_secret_key', expires_in=3600)
+token_serializer = Serializer(os.getenv("TOP_SECRET_KEY"), expires_in=3600)
 
 
 class AuthAPI(Resource):
