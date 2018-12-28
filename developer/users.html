@@ -1,0 +1,283 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>Users &mdash; ITUCSDB1829 0.1 Alpha documentation</title>
+  
+
+  
+  
+  
+  
+
+  
+
+  
+  
+    
+
+  
+
+  <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="Questions" href="questions.html" />
+    <link rel="prev" title="Dashboard" href="dashboard.html" /> 
+
+  
+  <script src="../_static/js/modernizr.min.js"></script>
+
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search">
+          
+
+          
+            <a href="../index.html" class="icon icon-home"> ITUCSDB1829
+          
+
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                0.1
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <ul class="current">
+<li class="toctree-l1 current"><a class="reference internal" href="index.html">Developer Guide</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="index.html#back-end">Back-End</a></li>
+<li class="toctree-l2 current"><a class="reference internal" href="index.html#front-end">Front-End</a><ul class="current">
+<li class="toctree-l3"><a class="reference internal" href="dashboard.html">Dashboard</a></li>
+<li class="toctree-l3 current"><a class="current reference internal" href="#">Users</a></li>
+<li class="toctree-l3"><a class="reference internal" href="questions.html">Questions</a></li>
+<li class="toctree-l3"><a class="reference internal" href="feedbacks.html">Feedbacks</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../user/index.html">User Guide</a></li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">ITUCSDB1829</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../index.html">Docs</a> &raquo;</li>
+        
+          <li><a href="index.html">Developer Guide</a> &raquo;</li>
+        
+      <li>Users</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+            
+            <a href="../_sources/developer/users.rst.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="users">
+<h1>Users<a class="headerlink" href="#users" title="Permalink to this headline">¶</a></h1>
+<div class="highlight-javascript notranslate"><div class="highlight"><pre><span></span>//users.js
+export const UserList = (props) =&gt; (
+    &lt;List {...props} title=&quot;User List&quot;&gt;
+        &lt;Datagrid&gt;
+            &lt;TextField source=&quot;id&quot;/&gt;
+            &lt;TextField source=&quot;name&quot;/&gt;
+            &lt;TextField source=&quot;surname&quot;/&gt;
+            &lt;TextField source=&quot;email&quot;/&gt;
+            &lt;TextField source=&quot;phone_number&quot;/&gt;
+            &lt;TextField source=&quot;role&quot;/&gt;
+            &lt;TextField source=&quot;iban&quot;/&gt;
+            &lt;EditButton basePath=&quot;/users&quot;/&gt;
+            &lt;DeleteButton basePath=&quot;/users&quot;/&gt;
+        &lt;/Datagrid&gt;
+    &lt;/List&gt;
+);
+
+const UserTitle = ({record}) =&gt; {
+    return &lt;span&gt;User {record ? `&quot;${record.name}&quot;` : &#39;&#39;}&lt;/span&gt;;
+};
+
+export const UserEdit = (props) =&gt; (
+    &lt;Edit title={&lt;UserTitle/&gt;} {...props}&gt;
+        &lt;SimpleForm&gt;
+            &lt;DisabledInput source=&quot;id&quot;/&gt;
+            &lt;TextInput source=&quot;name&quot;/&gt;
+            &lt;TextInput source=&quot;surname&quot;/&gt;
+            &lt;TextInput source=&quot;email&quot;/&gt;
+            &lt;TextInput source=&quot;phone_number&quot;/&gt;
+            &lt;TextInput source=&quot;role&quot;/&gt;
+            &lt;TextInput source=&quot;iban&quot;/&gt;
+        &lt;/SimpleForm&gt;
+    &lt;/Edit&gt;
+);
+
+export const UserCreate = (props) =&gt; (
+    &lt;Create title=&quot;Create an User&quot; {...props}&gt;
+        &lt;SimpleForm&gt;
+            &lt;TextInput source=&quot;name&quot;/&gt;
+            &lt;TextInput source=&quot;surname&quot;/&gt;
+            &lt;TextInput source=&quot;password&quot;/&gt;
+            &lt;TextInput source=&quot;email&quot;/&gt;
+            &lt;TextInput source=&quot;phone_number&quot;/&gt;
+            &lt;TextInput source=&quot;role&quot;/&gt;
+            &lt;TextInput source=&quot;iban&quot;/&gt;
+        &lt;/SimpleForm&gt;
+    &lt;/Create&gt;
+);
+
+//app.js
+
+   &lt;Resource name=&quot;users&quot; list={UserList} edit={UserEdit} create={UserCreate} /&gt;
+</pre></div>
+</div>
+<p>The code field given above describes user components. UserList, UserEdit and
+UserCreate has necessary forms and fields. This views passed into Admin component in <em>App.js</em>.</p>
+</div>
+
+
+           </div>
+           
+          </div>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+        <a href="questions.html" class="btn btn-neutral float-right" title="Questions" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
+      
+      
+        <a href="dashboard.html" class="btn btn-neutral" title="Dashboard" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2018, ITUCSDB1829
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  
+
+    
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
+        <script type="text/javascript" src="../_static/jquery.js"></script>
+        <script type="text/javascript" src="../_static/underscore.js"></script>
+        <script type="text/javascript" src="../_static/doctools.js"></script>
+        <script type="text/javascript" src="../_static/language_data.js"></script>
+    
+
+  
+
+  <script type="text/javascript" src="../_static/js/theme.js"></script>
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

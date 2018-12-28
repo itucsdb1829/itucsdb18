@@ -1,0 +1,650 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>Models &mdash; ITUCSDB1829 0.1 Alpha documentation</title>
+  
+
+  
+  
+  
+  
+
+  
+
+  
+  
+    
+
+  
+
+  <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="Views" href="views.html" />
+    <link rel="prev" title="Database Design" href="database.html" /> 
+
+  
+  <script src="../_static/js/modernizr.min.js"></script>
+
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search">
+          
+
+          
+            <a href="../index.html" class="icon icon-home"> ITUCSDB1829
+          
+
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                0.1
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <ul class="current">
+<li class="toctree-l1 current"><a class="reference internal" href="index.html">Developer Guide</a><ul class="current">
+<li class="toctree-l2 current"><a class="reference internal" href="index.html#back-end">Back-End</a><ul class="current">
+<li class="toctree-l3"><a class="reference internal" href="database.html">Database Design</a></li>
+<li class="toctree-l3 current"><a class="current reference internal" href="#">Models</a></li>
+<li class="toctree-l3"><a class="reference internal" href="views.html">Views</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="index.html#front-end">Front-End</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../user/index.html">User Guide</a></li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">ITUCSDB1829</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../index.html">Docs</a> &raquo;</li>
+        
+          <li><a href="index.html">Developer Guide</a> &raquo;</li>
+        
+      <li>Models</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+            
+            <a href="../_sources/developer/models.rst.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="models">
+<h1>Models<a class="headerlink" href="#models" title="Permalink to this headline">¶</a></h1>
+<p><strong>Base Model</strong></p>
+<p>The project has simple Object Relational Mapper to make implementation easier. <em>BaseModel</em> is
+underlying structure of the simple ORM’s.</p>
+<blockquote>
+<div><div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1">#models/base.py</span>
+
+<span class="k">class</span> <span class="nc">BaseModel</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
+
+    <span class="n">sql_field_number</span> <span class="o">=</span> <span class="mi">0</span>
+
+    <span class="k">def</span> <span class="nf">save</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">pass</span>
+
+    <span class="k">def</span> <span class="nf">update</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+        <span class="n">set_params</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="n">set_values</span> <span class="o">=</span> <span class="p">[]</span>
+
+        <span class="k">if</span> <span class="s1">&#39;password&#39;</span> <span class="ow">in</span> <span class="n">kwargs</span><span class="p">:</span>
+            <span class="n">kwargs</span><span class="p">[</span><span class="s1">&#39;password&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">generate_password_hash</span><span class="p">(</span><span class="n">kwargs</span><span class="p">[</span><span class="s1">&#39;password&#39;</span><span class="p">])</span>
+
+        <span class="k">for</span> <span class="n">key</span><span class="p">,</span> <span class="n">value</span> <span class="ow">in</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+            <span class="n">set_params</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s2">&quot;{}=</span><span class="si">%s</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">key</span><span class="p">))</span>
+            <span class="n">set_values</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">value</span><span class="p">)</span>
+
+        <span class="n">exp</span> <span class="o">=</span> <span class="s1">&#39;&#39;&#39;UPDATE {table_name} SET {filter} WHERE id=</span><span class="si">%s</span><span class="s1">&#39;&#39;&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
+            <span class="n">table_name</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="vm">__class__</span><span class="o">.</span><span class="vm">__name__</span><span class="o">.</span><span class="n">lower</span><span class="p">(),</span>
+            <span class="nb">filter</span><span class="o">=</span><span class="s1">&#39;,&#39;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">set_params</span><span class="p">),</span>
+        <span class="p">)</span>
+        <span class="n">set_values</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">id</span><span class="p">)</span>
+        <span class="n">db_client</span><span class="o">.</span><span class="n">query</span><span class="p">(</span><span class="n">exp</span><span class="p">,</span> <span class="n">set_values</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="vm">__dict__</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+        <span class="k">return</span> <span class="bp">self</span>
+
+    <span class="k">def</span> <span class="nf">delete</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">id</span><span class="p">:</span>
+            <span class="k">return</span> <span class="bp">None</span>
+
+        <span class="n">exp</span> <span class="o">=</span> <span class="s1">&#39;&#39;&#39;DELETE FROM {table_name} WHERE id=</span><span class="si">%s</span><span class="s1"> RETURNING id&#39;&#39;&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
+            <span class="n">table_name</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="vm">__class__</span><span class="o">.</span><span class="vm">__name__</span><span class="o">.</span><span class="n">lower</span><span class="p">(),</span>
+        <span class="p">)</span>
+        <span class="nb">id</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">id</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">id</span> <span class="o">=</span> <span class="bp">None</span>
+
+        <span class="k">return</span> <span class="n">db_client</span><span class="o">.</span><span class="n">fetch</span><span class="p">(</span><span class="n">exp</span><span class="p">,</span> <span class="p">[</span><span class="nb">id</span><span class="p">])[</span><span class="mi">0</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span>
+
+    <span class="nd">@classmethod</span>
+    <span class="k">def</span> <span class="nf">filter</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+        <span class="n">params</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;TRUE&#39;</span><span class="p">]</span>
+        <span class="n">values</span> <span class="o">=</span> <span class="p">[]</span>
+
+        <span class="k">for</span> <span class="n">key</span><span class="p">,</span> <span class="n">value</span> <span class="ow">in</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+            <span class="n">params</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s2">&quot;{}=</span><span class="si">%s</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">key</span><span class="p">))</span>
+            <span class="n">values</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">value</span><span class="p">)</span>
+
+        <span class="n">exp</span> <span class="o">=</span> <span class="s1">&#39;&#39;&#39;SELECT * FROM {table_name} WHERE {filter} ORDER BY id ASC&#39;&#39;&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
+            <span class="n">table_name</span><span class="o">=</span><span class="bp">cls</span><span class="o">.</span><span class="vm">__name__</span><span class="o">.</span><span class="n">lower</span><span class="p">(),</span>
+            <span class="nb">filter</span><span class="o">=</span><span class="s1">&#39; and &#39;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">params</span><span class="p">),</span>
+        <span class="p">)</span>
+
+        <span class="n">rows</span> <span class="o">=</span> <span class="n">db_client</span><span class="o">.</span><span class="n">fetch</span><span class="p">(</span><span class="n">exp</span><span class="p">,</span> <span class="n">values</span><span class="p">)</span>
+        <span class="n">objects</span> <span class="o">=</span> <span class="p">[</span><span class="bp">cls</span><span class="p">(</span><span class="o">*</span><span class="n">row</span><span class="p">)</span> <span class="k">for</span> <span class="n">row</span> <span class="ow">in</span> <span class="n">rows</span><span class="p">]</span>
+
+        <span class="k">return</span> <span class="n">QueryList</span><span class="p">(</span><span class="n">objects</span><span class="p">)</span>
+
+    <span class="nd">@classmethod</span>
+    <span class="k">def</span> <span class="nf">get</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">cls</span><span class="o">.</span><span class="n">filter</span><span class="p">(</span><span class="o">**</span><span class="n">kwargs</span><span class="p">)</span><span class="o">.</span><span class="n">first</span><span class="p">()</span>
+
+    <span class="nd">@classmethod</span>
+    <span class="k">def</span> <span class="nf">create</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+        <span class="n">obj</span> <span class="o">=</span> <span class="bp">cls</span><span class="p">(</span><span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+        <span class="n">obj</span><span class="o">.</span><span class="n">save</span><span class="p">()</span>
+        <span class="k">return</span> <span class="n">obj</span>
+</pre></div>
+</div>
+</div></blockquote>
+<p>This model has some methods for CRUD operations. Some of them are overrided while using other models.
+These methods fetches or creates necessary data and do necessary database operations using <em>db_client</em>.</p>
+<p><strong>Users Model</strong></p>
+<p>This model represents user structure of Question Collector. Model is inherited from <em>BaseModel</em> and
+overrided some methods to do special operations.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1">#models/users.py</span>
+<span class="k">class</span> <span class="nc">Users</span><span class="p">(</span><span class="n">BaseModel</span><span class="p">):</span>
+    <span class="n">sql_fields</span> <span class="o">=</span> <span class="p">[</span>
+        <span class="s1">&#39;id SERIAL UNIQUE&#39;</span><span class="p">,</span>
+        <span class="s1">&#39;name VARCHAR(20)&#39;</span><span class="p">,</span>
+        <span class="s1">&#39;surname VARCHAR(20)&#39;</span><span class="p">,</span>
+        <span class="s1">&#39;email VARCHAR(40) UNIQUE&#39;</span><span class="p">,</span>
+        <span class="s1">&#39;phone_number VARCHAR(12) UNIQUE&#39;</span><span class="p">,</span>
+        <span class="s1">&#39;password text&#39;</span><span class="p">,</span>
+        <span class="s1">&#39;role VARCHAR(20)&#39;</span><span class="p">,</span>
+        <span class="s1">&#39;iban VARCHAR(24)&#39;</span>
+    <span class="p">]</span>
+
+    <span class="n">sql_field_number</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">sql_fields</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="nb">id</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="n">surname</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="n">email</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="n">phone_number</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="n">password</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="n">role</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span>
+                 <span class="n">iban</span><span class="o">=</span><span class="bp">None</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">id</span> <span class="o">=</span> <span class="nb">id</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">name</span> <span class="o">=</span> <span class="n">name</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">surname</span> <span class="o">=</span> <span class="n">surname</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">email</span> <span class="o">=</span> <span class="n">email</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">phone_number</span> <span class="o">=</span> <span class="n">phone_number</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">password</span> <span class="o">=</span> <span class="n">password</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">role</span> <span class="o">=</span> <span class="n">role</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">iban</span> <span class="o">=</span> <span class="n">iban</span>
+
+        <span class="n">exp</span> <span class="o">=</span> <span class="s1">&#39;&#39;&#39;CREATE TABLE IF NOT EXISTS {table_name} ({fields})&#39;&#39;&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
+            <span class="n">table_name</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="vm">__class__</span><span class="o">.</span><span class="vm">__name__</span><span class="o">.</span><span class="n">lower</span><span class="p">(),</span>
+            <span class="n">fields</span><span class="o">=</span><span class="s1">&#39;,&#39;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">sql_fields</span><span class="p">))</span>
+
+        <span class="n">db_client</span><span class="o">.</span><span class="n">query</span><span class="p">(</span><span class="n">exp</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">save</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">id</span><span class="p">:</span>
+            <span class="n">update_set</span> <span class="o">=</span> <span class="s1">&#39;,&#39;</span><span class="o">.</span><span class="n">join</span><span class="p">([</span>
+                <span class="s2">&quot;{key}=</span><span class="si">%s</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">key</span><span class="o">=</span><span class="s1">&#39;name&#39;</span><span class="p">),</span>
+                <span class="s2">&quot;{key}=</span><span class="si">%s</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">key</span><span class="o">=</span><span class="s1">&#39;surname&#39;</span><span class="p">),</span>
+                <span class="s2">&quot;{key}=</span><span class="si">%s</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">key</span><span class="o">=</span><span class="s1">&#39;email&#39;</span><span class="p">),</span>
+                <span class="s2">&quot;{key}=</span><span class="si">%s</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">key</span><span class="o">=</span><span class="s1">&#39;phone_number&#39;</span><span class="p">),</span>
+                <span class="s2">&quot;{key}=</span><span class="si">%s</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">key</span><span class="o">=</span><span class="s1">&#39;password&#39;</span><span class="p">),</span>
+                <span class="s2">&quot;{key}=</span><span class="si">%s</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">key</span><span class="o">=</span><span class="s1">&#39;role&#39;</span><span class="p">),</span>
+                <span class="s2">&quot;{key}=</span><span class="si">%s</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">key</span><span class="o">=</span><span class="s1">&#39;iban&#39;</span><span class="p">),</span>
+            <span class="p">])</span>
+            <span class="n">exp</span> <span class="o">=</span> <span class="s1">&#39;&#39;&#39;UPDATE {table_name} SET {values} WHERE id=</span><span class="si">%s</span><span class="s1"> RETURNING id&#39;&#39;&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
+                <span class="n">table_name</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="vm">__class__</span><span class="o">.</span><span class="vm">__name__</span><span class="o">.</span><span class="n">lower</span><span class="p">(),</span>
+                <span class="n">values</span><span class="o">=</span><span class="n">update_set</span><span class="p">,</span>
+            <span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">id</span> <span class="o">=</span> <span class="n">db_client</span><span class="o">.</span><span class="n">fetch</span><span class="p">(</span><span class="n">exp</span><span class="p">,</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">name</span><span class="p">,</span>
+                                            <span class="bp">self</span><span class="o">.</span><span class="n">surname</span><span class="p">,</span>
+                                            <span class="bp">self</span><span class="o">.</span><span class="n">email</span><span class="p">,</span>
+                                            <span class="bp">self</span><span class="o">.</span><span class="n">phone_number</span><span class="p">,</span>
+                                            <span class="bp">self</span><span class="o">.</span><span class="n">password</span><span class="p">,</span>
+                                            <span class="bp">self</span><span class="o">.</span><span class="n">role</span><span class="p">,</span>
+                                            <span class="bp">self</span><span class="o">.</span><span class="n">iban</span><span class="p">,</span>
+                                            <span class="bp">self</span><span class="o">.</span><span class="n">id</span><span class="p">))[</span><span class="mi">0</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">password</span> <span class="o">=</span> <span class="n">generate_password_hash</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">password</span><span class="p">)</span>
+            <span class="n">exp</span> <span class="o">=</span> <span class="s1">&#39;&#39;&#39;INSERT INTO {table_name} ({table_fields}) VALUES ({values}) RETURNING id&#39;&#39;&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
+                <span class="n">table_name</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="vm">__class__</span><span class="o">.</span><span class="vm">__name__</span><span class="o">.</span><span class="n">lower</span><span class="p">(),</span>
+                <span class="n">table_fields</span><span class="o">=</span><span class="s1">&#39;,&#39;</span><span class="o">.</span><span class="n">join</span><span class="p">([</span>
+                    <span class="s1">&#39;{}&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="s1">&#39;name&#39;</span><span class="p">),</span>
+                    <span class="s1">&#39;{}&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="s1">&#39;surname&#39;</span><span class="p">),</span>
+                    <span class="s1">&#39;{}&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="s1">&#39;email&#39;</span><span class="p">),</span>
+                    <span class="s1">&#39;{}&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="s1">&#39;phone_number&#39;</span><span class="p">),</span>
+                    <span class="s1">&#39;{}&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="s1">&#39;password&#39;</span><span class="p">),</span>
+                    <span class="s1">&#39;{}&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="s1">&#39;role&#39;</span><span class="p">),</span>
+                    <span class="s1">&#39;{}&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="s1">&#39;iban&#39;</span><span class="p">),</span>
+                <span class="p">]),</span>
+                <span class="n">values</span><span class="o">=</span><span class="s1">&#39;,&#39;</span><span class="o">.</span><span class="n">join</span><span class="p">([</span><span class="s1">&#39;</span><span class="si">%s</span><span class="s1">&#39;</span><span class="p">,</span> <span class="s1">&#39;</span><span class="si">%s</span><span class="s1">&#39;</span><span class="p">,</span> <span class="s1">&#39;</span><span class="si">%s</span><span class="s1">&#39;</span><span class="p">,</span> <span class="s1">&#39;</span><span class="si">%s</span><span class="s1">&#39;</span><span class="p">,</span> <span class="s1">&#39;</span><span class="si">%s</span><span class="s1">&#39;</span><span class="p">,</span> <span class="s1">&#39;</span><span class="si">%s</span><span class="s1">&#39;</span><span class="p">,</span> <span class="s1">&#39;</span><span class="si">%s</span><span class="s1">&#39;</span><span class="p">])</span>
+            <span class="p">)</span>
+
+            <span class="bp">self</span><span class="o">.</span><span class="n">id</span> <span class="o">=</span> <span class="n">db_client</span><span class="o">.</span><span class="n">fetch</span><span class="p">(</span><span class="n">exp</span><span class="p">,</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">name</span><span class="p">,</span>
+                                            <span class="bp">self</span><span class="o">.</span><span class="n">surname</span><span class="p">,</span>
+                                            <span class="bp">self</span><span class="o">.</span><span class="n">email</span><span class="p">,</span>
+                                            <span class="bp">self</span><span class="o">.</span><span class="n">phone_number</span><span class="p">,</span>
+                                            <span class="bp">self</span><span class="o">.</span><span class="n">password</span><span class="p">,</span>
+                                            <span class="bp">self</span><span class="o">.</span><span class="n">role</span><span class="p">,</span>
+                                            <span class="bp">self</span><span class="o">.</span><span class="n">iban</span><span class="p">))[</span><span class="mi">0</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span>
+        <span class="k">return</span> <span class="bp">self</span>
+
+    <span class="k">def</span> <span class="nf">check_password</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">password</span><span class="p">):</span>
+        <span class="k">return</span> <span class="n">check_password_hash</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">password</span><span class="p">,</span> <span class="n">password</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">set_password</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">password</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">password</span> <span class="o">=</span> <span class="n">generate_password_hash</span><span class="p">(</span><span class="n">password</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">save</span><span class="p">()</span>
+</pre></div>
+</div>
+<p>Save method is not defined in <em>BaseModel</em> because of the difference of the table field so it is
+defined in user model. This model also has two special methods called <em>set_password()</em>
+and <em>check_password()</em>.</p>
+<p><strong>Questions Model</strong></p>
+<p>This model represents question structure of Question Collector. Model is inherited from <em>BaseModel</em> and
+overrided some methods to do special operations.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1">#models/questions.py</span>
+<span class="k">class</span> <span class="nc">Questions</span><span class="p">(</span><span class="n">BaseModel</span><span class="p">):</span>
+<span class="n">sql_fields</span> <span class="o">=</span> <span class="p">[</span>
+    <span class="s1">&#39;id SERIAL UNIQUE&#39;</span><span class="p">,</span>
+    <span class="s1">&#39;question_image TEXT NOT NULL&#39;</span><span class="p">,</span>
+    <span class="s1">&#39;answer_image TEXT&#39;</span><span class="p">,</span>
+    <span class="s1">&#39;choice CHAR&#39;</span><span class="p">,</span>
+    <span class="s1">&#39;course VARCHAR(20)&#39;</span><span class="p">,</span>
+    <span class="s1">&#39;subject VARCHAR(30)&#39;</span><span class="p">,</span>
+    <span class="s1">&#39;comment TEXT&#39;</span><span class="p">,</span>
+    <span class="s1">&#39;teacher INTEGER REFERENCES users(id) ON DELETE SET NULL&#39;</span>
+<span class="p">]</span>
+
+<span class="n">sql_field_number</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">sql_fields</span><span class="p">)</span>
+
+<span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="nb">id</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="n">question_image</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="n">answer_image</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="n">choice</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="n">course</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span>
+             <span class="n">subject</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="n">comment</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="n">teacher</span><span class="o">=</span><span class="bp">None</span><span class="p">):</span>
+
+    <span class="bp">self</span><span class="o">.</span><span class="n">id</span> <span class="o">=</span> <span class="nb">id</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">question_image</span> <span class="o">=</span> <span class="n">question_image</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">answer_image</span> <span class="o">=</span> <span class="n">answer_image</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">choice</span> <span class="o">=</span> <span class="n">choice</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">course</span> <span class="o">=</span> <span class="n">course</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">subject</span> <span class="o">=</span> <span class="n">subject</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">comment</span> <span class="o">=</span> <span class="n">comment</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">teacher</span> <span class="o">=</span> <span class="n">teacher</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">teacher</span><span class="p">:</span>
+        <span class="n">teacher_id</span><span class="o">=</span><span class="mi">1</span>
+    <span class="k">if</span> <span class="nb">type</span><span class="p">(</span><span class="n">teacher</span><span class="p">)</span> <span class="o">!=</span> <span class="n">Users</span><span class="p">:</span>
+        <span class="n">teacher_id</span><span class="o">=</span><span class="n">teacher</span>
+
+    <span class="bp">self</span><span class="o">.</span><span class="n">teacher</span> <span class="o">=</span> <span class="n">Users</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="nb">id</span><span class="o">=</span><span class="n">teacher_id</span><span class="p">)</span>
+
+    <span class="n">exp</span> <span class="o">=</span> <span class="s1">&#39;&#39;&#39;CREATE TABLE IF NOT EXISTS {table_name} ({fields})&#39;&#39;&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
+        <span class="n">table_name</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="vm">__class__</span><span class="o">.</span><span class="vm">__name__</span><span class="o">.</span><span class="n">lower</span><span class="p">(),</span>
+        <span class="n">fields</span><span class="o">=</span><span class="s1">&#39;,&#39;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">sql_fields</span><span class="p">))</span>
+
+    <span class="n">db_client</span><span class="o">.</span><span class="n">query</span><span class="p">(</span><span class="n">exp</span><span class="p">)</span>
+
+<span class="k">def</span> <span class="nf">save</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">id</span><span class="p">:</span>
+        <span class="n">update_set</span> <span class="o">=</span> <span class="s1">&#39;,&#39;</span><span class="o">.</span><span class="n">join</span><span class="p">([</span>
+            <span class="s2">&quot;{key}=</span><span class="si">%s</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">key</span><span class="o">=</span><span class="s1">&#39;question_image&#39;</span><span class="p">,</span> <span class="n">value</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">question_image</span><span class="p">),</span>
+            <span class="s2">&quot;{key}=</span><span class="si">%s</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">key</span><span class="o">=</span><span class="s1">&#39;answer_image&#39;</span><span class="p">,</span> <span class="n">value</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">answer_image</span><span class="p">),</span>
+            <span class="s2">&quot;{key}=</span><span class="si">%s</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">key</span><span class="o">=</span><span class="s1">&#39;choice&#39;</span><span class="p">,</span> <span class="n">value</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">choice</span><span class="p">),</span>
+            <span class="s2">&quot;{key}=</span><span class="si">%s</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">key</span><span class="o">=</span><span class="s1">&#39;course&#39;</span><span class="p">,</span> <span class="n">value</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">course</span><span class="p">),</span>
+            <span class="s2">&quot;{key}=</span><span class="si">%s</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">key</span><span class="o">=</span><span class="s1">&#39;subject&#39;</span><span class="p">,</span> <span class="n">value</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">subject</span><span class="p">),</span>
+            <span class="s2">&quot;{key}=</span><span class="si">%s</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">key</span><span class="o">=</span><span class="s1">&#39;comment&#39;</span><span class="p">,</span> <span class="n">value</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">comment</span><span class="p">),</span>
+            <span class="s2">&quot;{key}=</span><span class="si">%s</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">key</span><span class="o">=</span><span class="s1">&#39;teacher&#39;</span><span class="p">,</span> <span class="n">value</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">teacher</span><span class="o">.</span><span class="n">id</span><span class="p">),</span>
+        <span class="p">])</span>
+        <span class="n">exp</span> <span class="o">=</span> <span class="s1">&#39;&#39;&#39;UPDATE {table_name} SET {values} WHERE id=</span><span class="si">%s</span><span class="s1"> RETURNING id&#39;&#39;&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
+            <span class="n">table_name</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="vm">__class__</span><span class="o">.</span><span class="vm">__name__</span><span class="o">.</span><span class="n">lower</span><span class="p">(),</span>
+            <span class="n">values</span><span class="o">=</span><span class="n">update_set</span><span class="p">,</span>
+        <span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">id</span> <span class="o">=</span> <span class="n">db_client</span><span class="o">.</span><span class="n">fetch</span><span class="p">(</span><span class="n">exp</span><span class="p">,</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">question_image</span><span class="p">,</span>
+                                        <span class="bp">self</span><span class="o">.</span><span class="n">answer_image</span><span class="p">,</span>
+                                        <span class="bp">self</span><span class="o">.</span><span class="n">choice</span><span class="p">,</span>
+                                        <span class="bp">self</span><span class="o">.</span><span class="n">course</span><span class="p">,</span>
+                                        <span class="bp">self</span><span class="o">.</span><span class="n">subject</span><span class="p">,</span>
+                                        <span class="bp">self</span><span class="o">.</span><span class="n">comment</span><span class="p">,</span>
+                                        <span class="bp">self</span><span class="o">.</span><span class="n">teacher</span><span class="o">.</span><span class="n">id</span><span class="p">,</span>
+                                        <span class="bp">self</span><span class="o">.</span><span class="n">id</span><span class="p">))[</span><span class="mi">0</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span>
+
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">exp</span> <span class="o">=</span> <span class="s1">&#39;&#39;&#39;INSERT INTO {table_name} ({table_fields}) VALUES ({values}) RETURNING id&#39;&#39;&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
+            <span class="n">table_name</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="vm">__class__</span><span class="o">.</span><span class="vm">__name__</span><span class="o">.</span><span class="n">lower</span><span class="p">(),</span>
+            <span class="n">table_fields</span><span class="o">=</span><span class="s1">&#39;,&#39;</span><span class="o">.</span><span class="n">join</span><span class="p">([</span>
+                <span class="s1">&#39;{}&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="s1">&#39;question_image&#39;</span><span class="p">),</span>
+                <span class="s1">&#39;{}&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="s1">&#39;answer_image&#39;</span><span class="p">),</span>
+                <span class="s1">&#39;{}&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="s1">&#39;choice&#39;</span><span class="p">),</span>
+                <span class="s1">&#39;{}&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="s1">&#39;course&#39;</span><span class="p">),</span>
+                <span class="s1">&#39;{}&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="s1">&#39;subject&#39;</span><span class="p">),</span>
+                <span class="s1">&#39;{}&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="s1">&#39;comment&#39;</span><span class="p">),</span>
+                <span class="s1">&#39;{}&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="s1">&#39;teacher&#39;</span><span class="p">),</span>
+            <span class="p">]),</span>
+            <span class="n">values</span><span class="o">=</span><span class="s1">&#39;,&#39;</span><span class="o">.</span><span class="n">join</span><span class="p">([</span><span class="s1">&#39;</span><span class="si">%s</span><span class="s1">&#39;</span><span class="p">,</span> <span class="s1">&#39;</span><span class="si">%s</span><span class="s1">&#39;</span><span class="p">,</span> <span class="s1">&#39;</span><span class="si">%s</span><span class="s1">&#39;</span><span class="p">,</span> <span class="s1">&#39;</span><span class="si">%s</span><span class="s1">&#39;</span><span class="p">,</span> <span class="s1">&#39;</span><span class="si">%s</span><span class="s1">&#39;</span><span class="p">,</span> <span class="s1">&#39;</span><span class="si">%s</span><span class="s1">&#39;</span><span class="p">,</span> <span class="s1">&#39;</span><span class="si">%s</span><span class="s1">&#39;</span><span class="p">])</span>
+        <span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">id</span> <span class="o">=</span> <span class="n">db_client</span><span class="o">.</span><span class="n">fetch</span><span class="p">(</span><span class="n">exp</span><span class="p">,</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">question_image</span><span class="p">,</span>
+                                        <span class="bp">self</span><span class="o">.</span><span class="n">answer_image</span><span class="p">,</span>
+                                        <span class="bp">self</span><span class="o">.</span><span class="n">choice</span><span class="p">,</span>
+                                        <span class="bp">self</span><span class="o">.</span><span class="n">course</span><span class="p">,</span>
+                                        <span class="bp">self</span><span class="o">.</span><span class="n">subject</span><span class="p">,</span>
+                                        <span class="bp">self</span><span class="o">.</span><span class="n">comment</span><span class="p">,</span>
+                                        <span class="bp">self</span><span class="o">.</span><span class="n">teacher</span><span class="o">.</span><span class="n">id</span><span class="p">))[</span><span class="mi">0</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span>
+    <span class="k">return</span> <span class="bp">self</span>
+
+<span class="k">def</span> <span class="nf">get_feedbacks</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="n">exp</span> <span class="o">=</span> <span class="s1">&#39;&#39;&#39;SELECT comment, quality_rate, difficulty_rate, is_proper, created_at, users.name, users.surname</span>
+<span class="s1">            FROM feedbacks JOIN users ON feedbacks.reviewer = users.id WHERE question=</span><span class="si">%s</span><span class="s1">&#39;&#39;&#39;</span>
+
+    <span class="n">rows</span> <span class="o">=</span> <span class="n">db_client</span><span class="o">.</span><span class="n">fetch</span><span class="p">(</span><span class="n">exp</span><span class="p">,</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">id</span><span class="p">,))</span>
+    <span class="n">r</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="k">for</span> <span class="n">row</span> <span class="ow">in</span> <span class="n">rows</span><span class="p">:</span>
+        <span class="n">d</span> <span class="o">=</span> <span class="p">{}</span>
+        <span class="n">d</span><span class="p">[</span><span class="s1">&#39;comment&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">row</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+        <span class="n">d</span><span class="p">[</span><span class="s1">&#39;quality_rate&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">row</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span>
+        <span class="n">d</span><span class="p">[</span><span class="s1">&#39;difficulty_rate&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">row</span><span class="p">[</span><span class="mi">2</span><span class="p">])</span>
+        <span class="n">d</span><span class="p">[</span><span class="s1">&#39;is_proper&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">row</span><span class="p">[</span><span class="mi">3</span><span class="p">]</span>
+        <span class="n">d</span><span class="p">[</span><span class="s1">&#39;created_at&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">row</span><span class="p">[</span><span class="mi">4</span><span class="p">]</span><span class="o">.</span><span class="n">isoformat</span><span class="p">()</span>
+        <span class="n">d</span><span class="p">[</span><span class="s1">&#39;reviewer&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="s1">&#39;{} {}&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">row</span><span class="p">[</span><span class="mi">5</span><span class="p">],</span> <span class="n">row</span><span class="p">[</span><span class="mi">6</span><span class="p">])</span>
+        <span class="n">r</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">d</span><span class="p">)</span>
+
+    <span class="k">return</span> <span class="n">r</span>
+
+<span class="nd">@classmethod</span>
+<span class="k">def</span> <span class="nf">filter</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+    <span class="n">params</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;TRUE&#39;</span><span class="p">]</span>
+    <span class="n">values</span> <span class="o">=</span> <span class="p">[]</span>
+
+    <span class="k">for</span> <span class="n">key</span><span class="p">,</span> <span class="n">value</span> <span class="ow">in</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+        <span class="n">params</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s2">&quot;{}.{}=</span><span class="si">%s</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="bp">cls</span><span class="o">.</span><span class="vm">__name__</span><span class="o">.</span><span class="n">lower</span><span class="p">(),</span> <span class="n">key</span><span class="p">))</span>
+        <span class="n">values</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">value</span><span class="p">)</span>
+
+    <span class="n">exp</span> <span class="o">=</span> <span class="s1">&#39;&#39;&#39;SELECT * FROM {table_name} JOIN users ON questions.teacher = users.id</span>
+<span class="s1">             WHERE {filter} ORDER BY questions.id DESC &#39;&#39;&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
+        <span class="n">table_name</span><span class="o">=</span><span class="bp">cls</span><span class="o">.</span><span class="vm">__name__</span><span class="o">.</span><span class="n">lower</span><span class="p">(),</span>
+        <span class="nb">filter</span><span class="o">=</span><span class="s1">&#39; and &#39;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">params</span><span class="p">),</span>
+    <span class="p">)</span>
+
+    <span class="n">rows</span> <span class="o">=</span> <span class="n">db_client</span><span class="o">.</span><span class="n">fetch</span><span class="p">(</span><span class="n">exp</span><span class="p">,</span> <span class="n">values</span><span class="p">)</span>
+    <span class="n">objects</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="k">for</span> <span class="n">row</span> <span class="ow">in</span> <span class="n">rows</span><span class="p">:</span>
+        <span class="n">t</span> <span class="o">=</span> <span class="n">Users</span><span class="p">(</span><span class="o">*</span><span class="n">row</span><span class="p">[</span><span class="bp">cls</span><span class="o">.</span><span class="n">sql_field_number</span><span class="p">:])</span>
+        <span class="n">q</span> <span class="o">=</span> <span class="n">Questions</span><span class="p">(</span><span class="o">*</span><span class="n">row</span><span class="p">[:</span><span class="bp">cls</span><span class="o">.</span><span class="n">sql_field_number</span><span class="p">])</span>
+        <span class="n">q</span><span class="o">.</span><span class="n">teacher</span><span class="o">=</span><span class="n">t</span>
+        <span class="n">objects</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">q</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">QueryList</span><span class="p">(</span><span class="n">objects</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>Save method is not defined in <em>BaseModel</em> because of the difference of the table field so it is
+defined in question model. Filter method is also overrided in question model. This model also has
+a special methodscalled <a href="#id1"><span class="problematic" id="id2">*</span></a>get_feedbacks()</p>
+<p><strong>*Feedbacks Model</strong></p>
+<p>This model represents question structure of Question Collector. Model is inherited from <em>BaseModel</em> and
+overrided some methods to do special operations.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1">#models/feedbacks.py</span>
+<span class="k">class</span> <span class="nc">FeedBacks</span><span class="p">(</span><span class="n">BaseModel</span><span class="p">):</span>
+<span class="n">sql_fields</span> <span class="o">=</span> <span class="p">[</span>
+    <span class="s1">&#39;id SERIAL UNIQUE&#39;</span><span class="p">,</span>
+    <span class="s1">&#39;question INTEGER REFERENCES questions(id) ON DELETE CASCADE&#39;</span><span class="p">,</span>
+    <span class="s1">&#39;comment TEXT&#39;</span><span class="p">,</span>
+    <span class="s1">&#39;quality_rate NUMERIC&#39;</span><span class="p">,</span>
+    <span class="s1">&#39;difficulty_rate NUMERIC&#39;</span><span class="p">,</span>
+    <span class="s1">&#39;is_proper BOOLEAN DEFAULT FALSE&#39;</span><span class="p">,</span>
+    <span class="s1">&#39;created_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP&#39;</span><span class="p">,</span>
+    <span class="s1">&#39;reviewer INTEGER REFERENCES users(id) ON DELETE SET NULL&#39;</span><span class="p">,</span>
+<span class="p">]</span>
+
+<span class="n">sql_field_number</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">sql_fields</span><span class="p">)</span>
+
+<span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="nb">id</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="n">question</span><span class="o">=</span><span class="n">Questions</span><span class="p">(),</span> <span class="n">comment</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="n">quality_rate</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="n">difficulty_rate</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span>
+             <span class="n">is_proper</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span>
+             <span class="n">created_at</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="n">reviewer</span><span class="o">=</span><span class="n">Users</span><span class="p">()):</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">id</span> <span class="o">=</span> <span class="nb">id</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">question</span> <span class="o">=</span> <span class="n">question</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">comment</span> <span class="o">=</span> <span class="n">comment</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">quality_rate</span> <span class="o">=</span> <span class="n">quality_rate</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">difficulty_rate</span> <span class="o">=</span> <span class="n">difficulty_rate</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">is_proper</span> <span class="o">=</span> <span class="n">is_proper</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">created_at</span> <span class="o">=</span> <span class="n">created_at</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">reviewer</span> <span class="o">=</span> <span class="n">reviewer</span>
+
+    <span class="k">if</span> <span class="ow">not</span> <span class="nb">type</span><span class="p">(</span><span class="n">question</span><span class="p">)</span> <span class="o">==</span> <span class="n">Questions</span><span class="p">:</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">question</span> <span class="o">=</span> <span class="n">Questions</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="nb">id</span><span class="o">=</span><span class="n">question</span><span class="p">)</span>
+
+    <span class="k">if</span> <span class="ow">not</span> <span class="nb">type</span><span class="p">(</span><span class="n">reviewer</span><span class="p">)</span> <span class="o">==</span> <span class="n">Users</span><span class="p">:</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">reviewer</span> <span class="o">=</span> <span class="n">Users</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="nb">id</span><span class="o">=</span><span class="n">reviewer</span><span class="p">)</span>
+
+    <span class="n">exp</span> <span class="o">=</span> <span class="s1">&#39;&#39;&#39;CREATE TABLE IF NOT EXISTS {table_name} ({fields})&#39;&#39;&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
+        <span class="n">table_name</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="vm">__class__</span><span class="o">.</span><span class="vm">__name__</span><span class="o">.</span><span class="n">lower</span><span class="p">(),</span>
+        <span class="n">fields</span><span class="o">=</span><span class="s1">&#39;,&#39;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">sql_fields</span><span class="p">))</span>
+
+    <span class="n">db_client</span><span class="o">.</span><span class="n">query</span><span class="p">(</span><span class="n">exp</span><span class="p">)</span>
+
+<span class="k">def</span> <span class="nf">save</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">id</span><span class="p">:</span>
+        <span class="n">update_set</span> <span class="o">=</span> <span class="s1">&#39;,&#39;</span><span class="o">.</span><span class="n">join</span><span class="p">([</span>
+            <span class="s2">&quot;{key}=</span><span class="si">%s</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">key</span><span class="o">=</span><span class="s1">&#39;comment&#39;</span><span class="p">),</span>
+            <span class="s2">&quot;{key}=</span><span class="si">%s</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">key</span><span class="o">=</span><span class="s1">&#39;quality_rate&#39;</span><span class="p">),</span>
+            <span class="s2">&quot;{key}=</span><span class="si">%s</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">key</span><span class="o">=</span><span class="s1">&#39;difficulty_rate&#39;</span><span class="p">),</span>
+            <span class="s2">&quot;{key}=</span><span class="si">%s</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">key</span><span class="o">=</span><span class="s1">&#39;is_proper&#39;</span><span class="p">),</span>
+            <span class="s2">&quot;{key}=</span><span class="si">%s</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">key</span><span class="o">=</span><span class="s1">&#39;reviewer&#39;</span><span class="p">),</span>
+        <span class="p">])</span>
+        <span class="n">exp</span> <span class="o">=</span> <span class="s1">&#39;&#39;&#39;UPDATE {table_name} SET {values} WHERE id=</span><span class="si">%s</span><span class="s1"> RETURNING id, created_at&#39;&#39;&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
+            <span class="n">table_name</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="vm">__class__</span><span class="o">.</span><span class="vm">__name__</span><span class="o">.</span><span class="n">lower</span><span class="p">(),</span>
+            <span class="n">values</span><span class="o">=</span><span class="n">update_set</span><span class="p">,</span>
+        <span class="p">)</span>
+        <span class="n">query</span> <span class="o">=</span> <span class="n">db_client</span><span class="o">.</span><span class="n">fetch</span><span class="p">(</span><span class="n">exp</span><span class="p">,</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">comment</span><span class="p">,</span>
+                                      <span class="bp">self</span><span class="o">.</span><span class="n">quality_rate</span><span class="p">,</span>
+                                      <span class="bp">self</span><span class="o">.</span><span class="n">difficulty_rate</span><span class="p">,</span>
+                                      <span class="bp">self</span><span class="o">.</span><span class="n">is_proper</span><span class="p">,</span>
+                                      <span class="bp">self</span><span class="o">.</span><span class="n">reviewer</span><span class="o">.</span><span class="n">id</span><span class="p">,</span>
+                                      <span class="bp">self</span><span class="o">.</span><span class="n">id</span><span class="p">))</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">id</span> <span class="o">=</span> <span class="n">query</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">created_at</span> <span class="o">=</span> <span class="n">query</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="mi">1</span><span class="p">]</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">exp</span> <span class="o">=</span> <span class="s1">&#39;&#39;&#39;INSERT INTO {table_name} ({table_fields}) VALUES ({values}) RETURNING id, created_at&#39;&#39;&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
+            <span class="n">table_name</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="vm">__class__</span><span class="o">.</span><span class="vm">__name__</span><span class="o">.</span><span class="n">lower</span><span class="p">(),</span>
+            <span class="n">table_fields</span><span class="o">=</span><span class="s1">&#39;,&#39;</span><span class="o">.</span><span class="n">join</span><span class="p">([</span>
+                <span class="s1">&#39;{}&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="s1">&#39;comment&#39;</span><span class="p">),</span>
+                <span class="s1">&#39;{}&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="s1">&#39;question&#39;</span><span class="p">),</span>
+                <span class="s1">&#39;{}&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="s1">&#39;quality_rate&#39;</span><span class="p">),</span>
+                <span class="s1">&#39;{}&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="s1">&#39;difficulty_rate&#39;</span><span class="p">),</span>
+                <span class="s1">&#39;{}&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="s1">&#39;is_proper&#39;</span><span class="p">),</span>
+                <span class="s1">&#39;{}&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="s1">&#39;reviewer&#39;</span><span class="p">),</span>
+            <span class="p">]),</span>
+            <span class="n">values</span><span class="o">=</span><span class="s1">&#39;,&#39;</span><span class="o">.</span><span class="n">join</span><span class="p">([</span><span class="s1">&#39;</span><span class="si">%s</span><span class="s1">&#39;</span><span class="p">,</span> <span class="s1">&#39;</span><span class="si">%s</span><span class="s1">&#39;</span><span class="p">,</span> <span class="s1">&#39;</span><span class="si">%s</span><span class="s1">&#39;</span><span class="p">,</span> <span class="s1">&#39;</span><span class="si">%s</span><span class="s1">&#39;</span><span class="p">,</span> <span class="s1">&#39;</span><span class="si">%s</span><span class="s1">&#39;</span><span class="p">,</span> <span class="s1">&#39;</span><span class="si">%s</span><span class="s1">&#39;</span><span class="p">])</span>
+        <span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">id</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">created_at</span> <span class="o">=</span> <span class="n">db_client</span><span class="o">.</span><span class="n">fetch</span><span class="p">(</span><span class="n">exp</span><span class="p">,</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">comment</span><span class="p">,</span>
+                                                         <span class="bp">self</span><span class="o">.</span><span class="n">question</span><span class="o">.</span><span class="n">id</span><span class="p">,</span>
+                                                         <span class="bp">self</span><span class="o">.</span><span class="n">quality_rate</span><span class="p">,</span>
+                                                         <span class="bp">self</span><span class="o">.</span><span class="n">difficulty_rate</span><span class="p">,</span>
+                                                         <span class="bp">self</span><span class="o">.</span><span class="n">is_proper</span><span class="p">,</span>
+                                                         <span class="bp">self</span><span class="o">.</span><span class="n">reviewer</span><span class="o">.</span><span class="n">id</span><span class="p">))[</span><span class="mi">0</span><span class="p">]</span>
+    <span class="k">return</span> <span class="bp">self</span>
+
+<span class="nd">@classmethod</span>
+<span class="k">def</span> <span class="nf">filter</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+    <span class="n">params</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;TRUE&#39;</span><span class="p">]</span>
+    <span class="n">values</span> <span class="o">=</span> <span class="p">[]</span>
+
+    <span class="k">for</span> <span class="n">key</span><span class="p">,</span> <span class="n">value</span> <span class="ow">in</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+        <span class="n">params</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s2">&quot;{}.{}=</span><span class="si">%s</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="bp">cls</span><span class="o">.</span><span class="vm">__name__</span><span class="o">.</span><span class="n">lower</span><span class="p">(),</span> <span class="n">key</span><span class="p">))</span>
+        <span class="n">values</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">value</span><span class="p">)</span>
+
+    <span class="n">exp</span> <span class="o">=</span> <span class="s1">&#39;&#39;&#39;SELECT * FROM {table_name} FULL JOIN users ON feedbacks.reviewer = users.id</span>
+<span class="s1">                JOIN questions ON feedbacks.question=questions.id</span>
+<span class="s1">                WHERE {filter} ORDER BY feedbacks.id DESC&#39;&#39;&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
+        <span class="n">table_name</span><span class="o">=</span><span class="bp">cls</span><span class="o">.</span><span class="vm">__name__</span><span class="o">.</span><span class="n">lower</span><span class="p">(),</span>
+        <span class="nb">filter</span><span class="o">=</span><span class="s1">&#39; and &#39;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">params</span><span class="p">),</span>
+    <span class="p">)</span>
+    <span class="n">rows</span> <span class="o">=</span> <span class="n">db_client</span><span class="o">.</span><span class="n">fetch</span><span class="p">(</span><span class="n">exp</span><span class="p">,</span> <span class="n">values</span><span class="p">)</span>
+    <span class="n">objects</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="k">for</span> <span class="n">row</span> <span class="ow">in</span> <span class="n">rows</span><span class="p">:</span>
+        <span class="n">t</span> <span class="o">=</span> <span class="n">Users</span><span class="p">(</span><span class="o">*</span><span class="n">row</span><span class="p">[</span><span class="bp">cls</span><span class="o">.</span><span class="n">sql_field_number</span><span class="p">:</span><span class="bp">cls</span><span class="o">.</span><span class="n">sql_field_number</span> <span class="o">+</span> <span class="n">Users</span><span class="o">.</span><span class="n">sql_field_number</span><span class="p">])</span>
+        <span class="n">q</span> <span class="o">=</span> <span class="n">Questions</span><span class="p">(</span><span class="o">*</span><span class="n">row</span><span class="p">[</span><span class="bp">cls</span><span class="o">.</span><span class="n">sql_field_number</span> <span class="o">+</span> <span class="n">Users</span><span class="o">.</span><span class="n">sql_field_number</span><span class="p">:])</span>
+        <span class="n">q</span><span class="o">.</span><span class="n">teacher</span> <span class="o">=</span> <span class="n">Users</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="nb">id</span><span class="o">=</span><span class="n">q</span><span class="o">.</span><span class="n">teacher</span><span class="o">.</span><span class="n">id</span><span class="p">)</span>
+        <span class="n">fb</span> <span class="o">=</span> <span class="n">FeedBacks</span><span class="p">(</span><span class="o">*</span><span class="n">row</span><span class="p">[:</span><span class="bp">cls</span><span class="o">.</span><span class="n">sql_field_number</span><span class="p">])</span>
+        <span class="n">fb</span><span class="o">.</span><span class="n">quality_rate</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">fb</span><span class="o">.</span><span class="n">quality_rate</span><span class="p">)</span>
+        <span class="n">fb</span><span class="o">.</span><span class="n">difficulty_rate</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">fb</span><span class="o">.</span><span class="n">quality_rate</span><span class="p">)</span>
+        <span class="n">fb</span><span class="o">.</span><span class="n">reviewer</span> <span class="o">=</span> <span class="n">t</span>
+        <span class="n">fb</span><span class="o">.</span><span class="n">question</span> <span class="o">=</span> <span class="n">q</span>
+        <span class="n">objects</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">fb</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">QueryList</span><span class="p">(</span><span class="n">objects</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>Save method is not defined in <em>BaseModel</em> because of the difference of the table field so it is
+defined in feedback model. Filter method is also overrided in feedback model.</p>
+</div>
+
+
+           </div>
+           
+          </div>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+        <a href="views.html" class="btn btn-neutral float-right" title="Views" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
+      
+      
+        <a href="database.html" class="btn btn-neutral" title="Database Design" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2018, ITUCSDB1829
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  
+
+    
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
+        <script type="text/javascript" src="../_static/jquery.js"></script>
+        <script type="text/javascript" src="../_static/underscore.js"></script>
+        <script type="text/javascript" src="../_static/doctools.js"></script>
+        <script type="text/javascript" src="../_static/language_data.js"></script>
+    
+
+  
+
+  <script type="text/javascript" src="../_static/js/theme.js"></script>
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>
