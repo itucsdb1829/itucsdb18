@@ -1,17 +1,30 @@
-Welcome to itucsdbNN's documentation!
-=====================================
+Welcome to Question Collector's documentation!
+==============================================
 
-:Team: Team Name
+:Team: ITUCSDB1829
 
 :Members:
 
    * Member 1
-   * Member 2
-   * Member 3
-   * Member 4
-   * Member 5
+   * Ş. Sedat Çağdaş
 
-**project description goes here (a few paragraphs)**
+
+
+    .. figure:: ../media/logo.png
+        :scale: 50 %
+        :alt: logo
+
+
+**Introduction**
+
+Question Collector is a platform for the organizations that prepare their own
+question bank. Question Collector brings together teachers and reviewers and
+makes reviewing process easier. In the platforms users have different roles to
+write, review and approve questions.
+
+The project is built on a RESTful API on the server side and React.js application on
+the client side. API is suitable to use with another clients.
+
 
 Contents:
 
