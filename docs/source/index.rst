@@ -5,12 +5,11 @@ Welcome to Question Collector's documentation!
 
 :Members:
 
-   * Member 1
    * Ş. Sedat Çağdaş
 
 
 
-    .. figure:: ../media/logo.png
+    .. figure:: media/logo.png
         :scale: 50 %
         :alt: logo
 
@@ -31,5 +30,5 @@ Contents:
 .. toctree::
    :maxdepth: 1
 
-   user/index
    developer/index
+   user/index

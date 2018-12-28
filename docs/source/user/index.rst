@@ -1,22 +1,24 @@
 User Guide
 ==========
 
-**explain how your application works from the user perspective, use
-screenshots whereever appropriate**
+  .. figure:: ../media/logo.png
+        :scale: 50 %
+        :alt: logo
 
-**to add a picture, use the following example**::
 
-   .. figure:: picture.png
-      :scale: 50 %
-      :alt: map to buried treasure
+Question Collector is a platform for the organizations that prepare their own
+question bank. Question Collector brings together teachers and reviewers and
+makes reviewing process easier. In the platforms users have different roles to
+write, review and approve questions.
 
-      This is the caption of the figure (a simple paragraph).
+Question Collector is a platform that brings teachers and reviewers together. It is perfect choice
+for the organisations that wants to prepare their own question bank.
+
 
 .. toctree::
 
-   member1
-   member2
-   member3
-   member4
-   member5
+   dashboard
+   users
+   questions
+   feedbacks
    
